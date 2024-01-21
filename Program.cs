@@ -12,6 +12,7 @@ public unsafe class NODE
     {
         this.type = type;
         refData = address;
+        data = *refData;
     }
     public NODE(string type, int size)
     {
