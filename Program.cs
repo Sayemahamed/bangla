@@ -7,12 +7,12 @@ public unsafe class NODE
 {
     public string type ="";
     public List<string> data = new  ();
-    public List<string>* refData = null;
-    public NODE(string type, List<string>* address)
+    public NODE(string type, bool reference,List<string>* address)
     {
         this.type = type;
-        refData = address;
-        data = *refData;
+        if (reference)
+            data = *address;
+        else data = new(*address);
     }
     public NODE(string type, int size)
     {
@@ -20,11 +20,12 @@ public unsafe class NODE
         for(var i=0; i<size; i++) { this.data.Add("0"); }
     }
 }
-public class Functions(List<Token>code)
+public class Functions(List<Token>arguments, List<Token>code)
 {
-    //public List<Token> arguments = new();
-    public List<Token> Code = code;
-    public List<Token> getCode ()=> Code; 
+    private readonly List<Token> arguments = arguments;
+    private readonly List<Token> Code = code;
+    public List<Token> getCode ()=> Code;
+    public List<Token> getArguments() => arguments;
 }
 public class Global
 {

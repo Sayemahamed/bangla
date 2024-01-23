@@ -56,7 +56,7 @@ internal class FunctionGenerator(List<Token> tokens)
                         i++;
                     }
                     list2.RemoveAt(list2.Count - 1);
-                    Global.functions.Add(tokens[j].getName(), new Functions(list2));
+                    Global.functions.Add(tokens[j].getName(), new Functions(list1,list2));
                 }
                 else
                 {

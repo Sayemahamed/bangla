@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace bangla;
-public class Token
+public unsafe class Token
 {
     private string type;
     private readonly string value;
@@ -14,6 +14,7 @@ public class Token
     private readonly int end;
     private readonly int line;
     private int index = 0;
+    private List<string>*[] arg;
     public Token(string type, string value, string name, int start, int end, int line)
     {
         this.type = type;
@@ -23,14 +24,23 @@ public class Token
         this.end = end;
         this.line = line;
     }
+    //Add
+    public void addArg(int idx, List<string>* data)
+    {
+        this.arg[idx] = data;
+    }
     //Set
+    public void setArg(int size)
+    {
+        arg = new List<string>*[size];
+    }
     public void setType(string type)
     {
         if (Global.memory.Peek().ContainsKey(this.name))
         {
             Global.memory.Peek()[this.name].type = type;
         }
-        else if(this.type!=Global.VARIABLE)
+        else if (this.type != Global.VARIABLE)
             this.type = type;
     }
     public void setValue(string value)
@@ -56,8 +66,8 @@ public class Token
         else if (Global.memory.Peek()[this.name].type == Global.INTEGER_VARIABLE)
         {
             //Console.WriteLine("daddy was here");
-            if (!int.TryParse(value, out var A)) erro.Execute();
-            else data = A.ToString();
+            if (!decimal.TryParse(value, out var A)) erro.Execute();
+            else data = Math.Floor(A).ToString();
         }
         Global.memory.Peek()[this.name].data[index] = data;
     }
