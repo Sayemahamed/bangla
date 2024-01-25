@@ -22,7 +22,6 @@ internal class FunctionGenerator(List<Token> tokens)
                 List<Token> list1 = new List<Token>();
                 List<Token> list2 = new List<Token>();
                 i++;
-                list1.Add(new Token(Global.LEFT_FIRST, "", "", 0, 0, 0));
                 var balance = 0;
                 if (i < tokens.Count && tokens[i].getType() == Global.LEFT_FIRST)
                 {
@@ -55,6 +54,7 @@ internal class FunctionGenerator(List<Token> tokens)
                         if (balance == 0 && tokens[i].getType() == Global.RIGHT_SECOND) break;
                         i++;
                     }
+                    list1.RemoveAt(list1.Count - 1);
                     list2.RemoveAt(list2.Count - 1);
                     Global.functions.Add(tokens[j].getName(), new Functions(list1,list2));
                 }

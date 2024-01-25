@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace bangla;
 internal class Interpreter(List<Token> tokens, int level)
 {
     private readonly List<Token> tokens = tokens;
-    private readonly List<Token>  variableInitialized = new();
+    private readonly List<Token> variableInitialized = new();
     private void clean()
     {
         foreach (Token token in variableInitialized)
@@ -17,7 +18,7 @@ internal class Interpreter(List<Token> tokens, int level)
         }
     }
     private readonly int Level = level;
-    private bool allowedInWrite(Token token) =>token.getType()==Global.STRING|| Global.isOperators(token.getType()) || token.getType() == Global.COMMA || token.getType() == Global.FUNCTION || Global.isDataType(token.getType()) || Global.isBrackets(token.getType());
+    private bool allowedInWrite(Token token) => token.getType() == Global.STRING || Global.isOperators(token.getType()) || token.getType() == Global.COMMA || token.getType() == Global.FUNCTION || Global.isDataType(token.getType()) || Global.isBrackets(token.getType());
     private bool allowedInRead(Token token) => Global.isDataType(token.getType()) || Global.COMMA == token.getType();
     private bool allowedInWhile(Token token) => Global.isOperators(token.getType()) || token.getType() == Global.FUNCTION || Global.isDataType(token.getType()) || Global.isBrackets(token.getType());
     public Token Evaluate()
@@ -111,8 +112,8 @@ internal class Interpreter(List<Token> tokens, int level)
                     {
                         foreach (var item in Converter.IN(Console.ReadLine() + "").Split())
                         {
-                            if(item.Length>0)
-                            temp.Add(item);
+                            if (item.Length > 0)
+                                temp.Add(item);
                         }
                     }
                     for (var k = 0; k < list.Count; k++)
@@ -184,62 +185,89 @@ internal class Interpreter(List<Token> tokens, int level)
 
             else if (tokens[i].getType() == Global.IF)
             {
-                List<Token> list1 = new List<Token>();
-                List<Token> list2 = new List<Token>();
-                i++;
-                list1.Add(new Token(Global.LEFT_FIRST, "", "", 0, 0, 0));
-                var balance = 0;
-                if (i < tokens.Count && tokens[i].getType() == Global.LEFT_FIRST)
+                var addCondition = true;
+                var addCode = true;
+                List<List<Token>> conditions = new List<List<Token>>();
+                List<List<Token>> code = new List<List<Token>>();
+                while ((addCondition || addCode) && i < tokens.Count)
                 {
-                    i++; balance++;
-                    while (i < tokens.Count)
+                    if (addCondition)
                     {
-                        if (tokens[i].getType() == Global.RIGHT_FIRST) balance--;
-                        else if (tokens[i].getType() == Global.LEFT_FIRST) balance++;
-                        list1.Add(tokens[i]);
-                        if (balance == 0 && tokens[i].getType() == Global.RIGHT_FIRST) break;
+                        List<Token> list = new List<Token>();
                         i++;
+                        list.Add(new Token(Global.LEFT_FIRST, "", "", 0, 0, 0));
+                        var balance = 1;
+                        if (i < tokens.Count && tokens[i].getType() == Global.LEFT_FIRST)
+                        {
+                            i++;
+                            while (i < tokens.Count)
+                            {
+                                if (tokens[i].getType() == Global.RIGHT_FIRST) balance--;
+                                else if (tokens[i].getType() == Global.LEFT_FIRST) balance++;
+                                list.Add(tokens[i]);
+                                if (balance == 0 && tokens[i].getType() == Global.RIGHT_FIRST) break;
+                                i++;
+                            }
+                            if (i == tokens.Count)
+                            {
+                                Error error = new Error(tokens[i], "Finish Your Code");
+                                error.Execute();
+                            }
+                            if (tokens[++i].getType() != Global.LEFT_SECOND)
+                            {
+                                Error error = new Error(tokens[i], "Expected {");
+                                error.Execute();
+                            }
+                            conditions.Add(list);
+                            addCondition = false;
+                        }
+                        else
+                        {
+                            Error error = new Error(tokens[i + 1], "Expected (");
+                            error.Execute();
+                        }
                     }
-                    if (i == tokens.Count)
+                    if (addCode)
                     {
-                        Error error = new Error(tokens[i], "Finish Your Code");
-                        error.Execute();
-                    }
-                    if (tokens[++i].getType() != Global.LEFT_SECOND)
-                    {
-                        Error error = new Error(tokens[i], "Expected {");
-                        error.Execute();
-                    }
-                    balance = 1;
-                    i++;
-                    while (i < tokens.Count)
-                    {
-                        if (tokens[i].getType() == Global.RIGHT_SECOND) balance--;
-                        else if (tokens[i].getType() == Global.LEFT_SECOND) balance++;
-                        list2.Add(tokens[i]);
-                        if (balance == 0 && tokens[i].getType() == Global.RIGHT_SECOND) break;
+                        var balance = 1;
+                        List<Token> list = new List<Token>();
                         i++;
+                        while (i < tokens.Count)
+                        {
+                            if (tokens[i].getType() == Global.RIGHT_SECOND) balance--;
+                            else if (tokens[i].getType() == Global.LEFT_SECOND) balance++;
+                            list.Add(tokens[i]);
+                            if (balance == 0 && tokens[i].getType() == Global.RIGHT_SECOND) break;
+                            i++;
+                        }
+                        list.RemoveAt(list.Count - 1);
+                        code.Add(list);
+                        addCode = false;
                     }
-                    list2.RemoveAt(list2.Count - 1);
-                    Expressions expressions = new Expressions(list1);
-                    Interpreter itr = new Interpreter(list2, 1);
-                    if (expressions.evaluate() != "0")
+                }
+                for (var it = 0; it < code.Count; it++)
+                {
+
+                    Expressions condition;
+                    if (it < conditions.Count)
+                        condition = new Expressions(conditions[it]);
+                    else
+                        condition = new Expressions(conditions[0]);
+                    Interpreter work = new Interpreter(code[it], 1);
+                    if (it == conditions.Count || condition.evaluate() != "0")
                     {
                         Global.cleanUp();
-                        var a = itr.Evaluate();
+                        var temp = work.Evaluate();
                         Global.cleanUp();
-                        if (a.getType() == "3") return a;
-                        if (a.getType() == "2") return a;
-                        if (a.getType() == "1") return a;
+                        if (temp.getType() == "3") return temp;
+                        if (temp.getType() == "2") return temp;
+                        if (temp.getType() == "1") return temp;
+                        break;
                     }
                     Global.cleanUp();
                 }
-                else
-                {
-                    Error error = new Error(tokens[i + 1], "Expected (");
-                    error.Execute();
-                }
             }
+
 
 
             //<---Initializers--->
@@ -417,7 +445,7 @@ internal class Interpreter(List<Token> tokens, int level)
             else
             {
                 List<Token> list = new List<Token>();
-                list.Add(new Token(Global.LEFT_FIRST,"","",0,0, 0));
+                list.Add(new Token(Global.LEFT_FIRST, "", "", 0, 0, 0));
                 for (; i < tokens.Count && tokens[i].getType() != Global.SEMI_COLON; i++)
                 {
                     if (allowedInWhile(tokens[i])) list.Add(tokens[i]);
