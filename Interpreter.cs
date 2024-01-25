@@ -213,11 +213,6 @@ internal class Interpreter(List<Token> tokens, int level)
                                 Error error = new Error(tokens[i], "Finish Your Code");
                                 error.Execute();
                             }
-                            if (tokens[++i].getType() != Global.LEFT_SECOND)
-                            {
-                                Error error = new Error(tokens[i], "Expected {");
-                                error.Execute();
-                            }
                             conditions.Add(list);
                             addCondition = false;
                         }
@@ -226,9 +221,15 @@ internal class Interpreter(List<Token> tokens, int level)
                             Error error = new Error(tokens[i + 1], "Expected (");
                             error.Execute();
                         }
+                        i++;
                     }
                     if (addCode)
                     {
+                        if (tokens[i].getType() != Global.LEFT_SECOND)
+                        {
+                            Error error = new Error(tokens[i], "Expected {");
+                            error.Execute();
+                        }
                         var balance = 1;
                         List<Token> list = new List<Token>();
                         i++;
@@ -240,6 +241,11 @@ internal class Interpreter(List<Token> tokens, int level)
                             if (balance == 0 && tokens[i].getType() == Global.RIGHT_SECOND) break;
                             i++;
                         }
+                        if (balance < 0)
+                        {
+                            Error error = new Error(tokens[Math.Min(i, tokens.Count - 1)], "Expected }");
+                            error.Execute();
+                        }
                         list.RemoveAt(list.Count - 1);
                         code.Add(list);
                         addCode = false;
@@ -247,7 +253,6 @@ internal class Interpreter(List<Token> tokens, int level)
                 }
                 for (var it = 0; it < code.Count; it++)
                 {
-
                     Expressions condition;
                     if (it < conditions.Count)
                         condition = new Expressions(conditions[it]);

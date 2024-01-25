@@ -44,6 +44,11 @@ internal class FunctionGenerator(List<Token> tokens)
                         Error error = new Error(tokens[i], "Expected {");
                         error.Execute();
                     }
+                    if (balance < 0)
+                    {
+                        Error error = new Error(tokens[Math.Min(i, tokens.Count - 1)], "Expected }");
+                        error.Execute();
+                    }
                     balance = 1;
                     i++;
                     while (i < tokens.Count)
@@ -53,6 +58,11 @@ internal class FunctionGenerator(List<Token> tokens)
                         list2.Add(tokens[i]);
                         if (balance == 0 && tokens[i].getType() == Global.RIGHT_SECOND) break;
                         i++;
+                    }
+                    if (balance < 0)
+                    {
+                        Error error = new Error(tokens[Math.Min(i, tokens.Count - 1)], "Expected }");
+                        error.Execute();
                     }
                     list1.RemoveAt(list1.Count - 1);
                     list2.RemoveAt(list2.Count - 1);
