@@ -251,6 +251,11 @@ internal class Interpreter(List<Token> tokens, int level)
                     }
                     if (tokens[i + 1].getType() == Global.OR)
                     {
+                        if (code.Count > conditions.Count)
+                        {
+                            Error error = new Error(tokens[i + 1], "Illegal Character");
+                            error.Execute();
+                        }
                         if(!(tokens[i + 2].getType() == Global.IF|| tokens[i + 2].getType() == Global.LEFT_SECOND))
                         {
                             Error error = new Error(tokens[i+2], "Expected {");
