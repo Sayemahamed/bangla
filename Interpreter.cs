@@ -249,19 +249,19 @@ internal class Interpreter(List<Token> tokens, int level)
                         code.Add(list);
                         addCode = false;
                     }
-                    if (tokens[i + 1].getType() == Global.OR)
+                    if (i < tokens.Count - 1 && tokens[i + 1].getType() == Global.OR)
                     {
                         if (code.Count > conditions.Count)
                         {
                             Error error = new Error(tokens[i + 1], "Illegal Character");
                             error.Execute();
                         }
-                        if(!(tokens[i + 2].getType() == Global.IF|| tokens[i + 2].getType() == Global.LEFT_SECOND))
+                        if (!(tokens[i + 2].getType() == Global.IF || tokens[i + 2].getType() == Global.LEFT_SECOND))
                         {
-                            Error error = new Error(tokens[i+2], "Expected {");
+                            Error error = new Error(tokens[i + 2], "Expected {");
                             error.Execute();
                         }
-                        if (tokens[i+2].getType() == Global.IF)
+                        if (i < tokens.Count - 2 && tokens[i + 2].getType() == Global.IF)
                         {
                             addCondition = true;
                             i += 2;
@@ -490,6 +490,6 @@ internal class Interpreter(List<Token> tokens, int level)
             }
         }
         clean();
-        return new Token("","0", "", 0, 0, 0);
+        return new Token("", "", "", 0, 0, 0);
     }
 }
