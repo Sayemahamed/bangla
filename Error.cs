@@ -11,9 +11,10 @@ internal class Error(Token token, string error)
     private readonly string code = Global.getCode();
     public void Execute()
     {
+        Console.Write("Line " + token.getLine() + " ");
         for (var i = 0; i < code.Length; i++)
         {
-            if (line > token.getLine())break;
+            if (line > token.getLine()) break;
             if (code[i] == '\n') line++;
             if (line == token.getLine()) Console.Write(code[i]);
             if (i >= token.getStart() - 1 && i < token.getEnd()) Console.ForegroundColor = ConsoleColor.Red;
