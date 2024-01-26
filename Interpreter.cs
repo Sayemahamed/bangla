@@ -8,6 +8,52 @@ using System.Threading.Tasks;
 namespace bangla;
 internal class Interpreter(List<Token> tokens, int level)
 {
+    private Token functionCleanUp(ref int i)
+    {
+        var j = i; var k = i + 1;
+        var balance = 0;
+        List<Token> list = new List<Token>();
+        while (k < tokens.Count)
+        {
+            if (tokens[k].getType() == Global.LEFT_FIRST) balance++;
+            if (tokens[k].getType() == Global.RIGHT_FIRST) balance--;
+            if (!allowedInWrite(tokens[k]))
+            {
+                Error error = new Error(tokens[k], "Illegal Character  ");
+                error.Execute();
+            }
+            if (balance == 0) break;
+            k++;
+        }
+        if (i + 1 != k) i += 2;
+        while (i < k)
+        {
+            List<Token> temp = [new Token(Global.LEFT_FIRST, "", "", 0, 0, 0)];
+            while (i < k && tokens[i].getType() != Global.COMMA)
+            {
+                if (tokens[i].getType() == Global.FUNCTION)
+                    temp.Add(functionCleanUp(ref i));
+                else temp.Add(tokens[i]);
+                i++;
+            }
+            temp.Add(new Token(Global.RIGHT_FIRST, "", "", 0, 0, 0));
+            i++;
+            if (temp.Count == 3 && (temp[1].getType() == Global.INTEGER_ARRAY || temp[1].getType() == Global.REAL_ARRAY || temp[1].getType() == Global.STRING_ARRAY))
+            {
+                list.Add(temp[1]);
+            }
+            else
+            {
+                Expressions expressions = new Expressions(temp);
+                var a = expressions.evaluate();
+                if (decimal.TryParse(a, out _)) list.Add(new Token(Global.REAL, a, "", 0, 0, 0));
+                else list.Add(new Token(Global.STRING, a, "", 0, 0, 0));
+                Global.cleanUp();
+            }
+        }
+        tokens[j].setArg(list);
+        return tokens[j];
+    }
     private readonly List<Token> tokens = tokens;
     private readonly List<Token> variableInitialized = new();
     private void clean()

@@ -14,7 +14,7 @@ public unsafe class Token
     private readonly int end;
     private readonly int line;
     private int index = 0;
-    private List<string>*[] arg;
+    private List<string>*[] arg = [];
     public Token(string type, string value, string name, int start, int end, int line)
     {
         this.type = type;
@@ -24,15 +24,10 @@ public unsafe class Token
         this.end = end;
         this.line = line;
     }
-    //Add
-    public void addArg(int idx, List<string>* data)
-    {
-        this.arg[idx] = data;
-    }
     //Set
-    public void setArg(int size)
+    public void setArg(List<Token>data)
     {
-        arg = new List<string>*[size];
+        arg = new List<string>*[data.Count];
     }
     public void setType(string type)
     {
