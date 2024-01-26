@@ -81,6 +81,11 @@ internal class Expressions
             else if (token.getType() == Global.DIVIDE)
             {
                 Token a = stack.Pop();
+                if(a.getValue()=="0")
+                {
+                    Error erro = new Error(a, "The Expression is giving DIVIDE_BY ZERO error ");
+                    erro.Execute();
+                }
                 if (stack.Count == 0)
                 {
                     Error erro = new Error(a, "Incorrect Expression");
@@ -99,6 +104,11 @@ internal class Expressions
             else if (token.getType() == Global.MOD)
             {
                 Token a = stack.Pop();
+                if (a.getValue() == "0")
+                {
+                    Error erro = new Error(a, "The Expression is giving DIVIDE_BY ZERO error ");
+                    erro.Execute();
+                }
                 if (stack.Count == 0)
                 {
                     Error erro = new Error(a, "Incorrect Expression");

@@ -221,11 +221,10 @@ internal class Interpreter(List<Token> tokens, int level)
                             Error error = new Error(tokens[i + 1], "Expected (");
                             error.Execute();
                         }
-                        i++;
                     }
                     if (addCode)
                     {
-                        if (tokens[i].getType() != Global.LEFT_SECOND)
+                        if (tokens[++i].getType() != Global.LEFT_SECOND)
                         {
                             Error error = new Error(tokens[i], "Expected {");
                             error.Execute();
@@ -249,6 +248,25 @@ internal class Interpreter(List<Token> tokens, int level)
                         list.RemoveAt(list.Count - 1);
                         code.Add(list);
                         addCode = false;
+                    }
+                    if (tokens[i + 1].getType() == Global.OR)
+                    {
+                        if(!(tokens[i + 2].getType() == Global.IF|| tokens[i + 2].getType() == Global.LEFT_SECOND))
+                        {
+                            Error error = new Error(tokens[i+2], "Expected {");
+                            error.Execute();
+                        }
+                        if (tokens[i+2].getType() == Global.IF)
+                        {
+                            addCondition = true;
+                            i += 2;
+                            addCode = true;
+                        }
+                        else
+                        {
+                            i++;
+                            addCode = true;
+                        }
                     }
                 }
                 for (var it = 0; it < code.Count; it++)
@@ -467,6 +485,6 @@ internal class Interpreter(List<Token> tokens, int level)
             }
         }
         clean();
-        return new Token("", "", "", 0, 0, 0);
+        return new Token("","0", "", 0, 0, 0);
     }
 }
