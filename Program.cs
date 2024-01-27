@@ -3,17 +3,10 @@ using System.Globalization;
 using System.Text;
 
 namespace bangla;
-public unsafe class NODE
+public  class NODE
 {
     public string type ="";
     public List<string> data = new  ();
-    public NODE(string type, bool reference,List<string>* address)
-    {
-        this.type = type;
-        if (reference)
-            data = *address;
-        else data = new(*address);
-    }
     public NODE(string type, int size)
     {
         this.type = type;
