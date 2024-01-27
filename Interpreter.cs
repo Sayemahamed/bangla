@@ -38,18 +38,11 @@ internal class Interpreter(List<Token> tokens, int level)
             }
             temp.Add(new Token(Global.RIGHT_FIRST, "", "", 0, 0, 0));
             i++;
-            if (temp.Count == 3 && Global.isDataType(temp[1].getType()))
-            {
-                list.Add(temp[1]);
-            }
-            else
-            {
-                Expressions expressions = new Expressions(temp);
-                var a = expressions.evaluate();
-                if (decimal.TryParse(a, out _)) list.Add(new Token(Global.REAL, a, "", 0, 0, 0));
-                else list.Add(new Token(Global.STRING, a, "", 0, 0, 0));
-                Global.cleanUp();
-            }
+            Expressions expressions = new Expressions(temp);
+            var a = expressions.evaluate();
+            if (decimal.TryParse(a, out _)) list.Add(new Token(Global.REAL, a, "", 0, 0, 0));
+            else list.Add(new Token(Global.STRING, a, "", 0, 0, 0));
+            Global.cleanUp();
         }
         if (list.Count != 0)
             tokens[j].setArg(list);
