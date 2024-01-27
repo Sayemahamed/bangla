@@ -52,7 +52,7 @@ internal class Interpreter(List<Token> tokens, int level)
             }
         }
         tokens[j].setArg(list);
-        i--;
+        if (i > j) i--;
         return tokens[j];
     }
     private readonly List<Token> tokens = tokens;
@@ -543,6 +543,6 @@ internal class Interpreter(List<Token> tokens, int level)
             }
         }
         clean();
-        return new Token("", "0","", 0, 0, 0);
+        return new Token("", "0", "", 0, 0, 0);
     }
 }
