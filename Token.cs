@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace bangla;
-public unsafe class Token(string type, string value, string name, int start, int end, int line)
+public class Token(string type, string value, string name, int start, int end, int line)
 {
     private string type = type;
     private readonly string value = value;
@@ -15,21 +15,9 @@ public unsafe class Token(string type, string value, string name, int start, int
     private readonly int line = line;
     private int index = 0;
     private List<Token> data;
-    private List<string>* point = null;
 
     //Set
-    public void setPoint(List<string>* point) => this.point = point;
-    public unsafe void setArg(List<Token> data)
-    {
-        this.data = data;
-        for (var i = 0; i < this.data.Count; i++)
-        {
-            if (Global.isVariable(this.data[i].getType()))
-            {
-                
-            }
-        }
-    }
+    public void setArg(List<Token> data) => this.data = data;
     public void setType(string type)
     {
         if (Global.memory.Peek().ContainsKey(this.name))
@@ -83,7 +71,6 @@ public unsafe class Token(string type, string value, string name, int start, int
         }
     }
     //Get
-    public List<string>* getPoint() => this.point;
     public string getType()
     {
         if (Global.functions.ContainsKey(this.name)) return Global.FUNCTION;

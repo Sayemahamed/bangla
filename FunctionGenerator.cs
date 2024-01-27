@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace bangla;
 internal class FunctionGenerator(List<Token> tokens)
 {
-    private List<Token> tokens = tokens;
+    private readonly List<Token> tokens = tokens;
     public void Generate()
     {
         for (var i = 0; i < this.tokens.Count; i++)
