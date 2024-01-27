@@ -14,7 +14,7 @@ public unsafe class Token
     private readonly int end;
     private readonly int line;
     private int index = 0;
-    private List<string>*[] arg = [];
+    public  List<Token> data = new ();
     public Token(string type, string value, string name, int start, int end, int line)
     {
         this.type = type;
@@ -25,10 +25,7 @@ public unsafe class Token
         this.line = line;
     }
     //Set
-    public void setArg(List<Token>data)
-    {
-        arg = new List<string>*[data.Count];
-    }
+    public void setArg(List<Token> data) => this.data = data;
     public void setType(string type)
     {
         if (Global.memory.Peek().ContainsKey(this.name))

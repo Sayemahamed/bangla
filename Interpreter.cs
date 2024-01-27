@@ -51,7 +51,8 @@ internal class Interpreter(List<Token> tokens, int level)
                 Global.cleanUp();
             }
         }
-        tokens[j].setArg(list);
+        if (list.Count != 0)
+            tokens[j].setArg(list);
         if (i > j) i--;
         return tokens[j];
     }
