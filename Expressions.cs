@@ -22,7 +22,7 @@ internal class Expressions
             if (token.getType() == Global.PLUS)
             {
                 Token a = stack.Pop();
-                if(stack.Count == 0)
+                if (stack.Count == 0)
                 {
                     Error error = new Error(a, "Incorrect Expression");
                     error.Execute();
@@ -36,11 +36,11 @@ internal class Expressions
                     ));
                 }
                 else
-                stack.Push(new Token(
-                Global.TEMPORARY,
-                (decimal.Parse(b.getValue()) + decimal.Parse(a.getValue())).ToString(), "", b.getStart(), a.getEnd(), b.getLine()
-                )
-            );
+                    stack.Push(new Token(
+                    Global.TEMPORARY,
+                    (decimal.Parse(b.getValue()) + decimal.Parse(a.getValue())).ToString(), "", b.getStart(), a.getEnd(), b.getLine()
+                    )
+                );
             }
             else if (token.getType() == Global.MINUS)
             {
@@ -81,7 +81,7 @@ internal class Expressions
             else if (token.getType() == Global.DIVIDE)
             {
                 Token a = stack.Pop();
-                if(a.getValue()=="0")
+                if (a.getValue() == "0")
                 {
                     Error erro = new Error(a, "The Expression is giving DIVIDE_BY ZERO error ");
                     erro.Execute();
@@ -313,6 +313,13 @@ internal class Expressions
                 stack.Peek().setValue(a.getValue());
             }
             else stack.Push(token);
+        }
+        if (stack.Count > 1)
+        {
+            var a = stack.Pop();
+            var b = stack.Pop();
+            Error error = new Error(new Token("", "", "", b.getStart(), a.getEnd(), b.getLine()), "Illegal Expression");
+            error.Execute();
         }
         var v = stack.Peek().getValue().ToString();
         return v;

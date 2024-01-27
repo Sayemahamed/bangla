@@ -38,7 +38,7 @@ internal class Interpreter(List<Token> tokens, int level)
             }
             temp.Add(new Token(Global.RIGHT_FIRST, "", "", 0, 0, 0));
             i++;
-            if (temp.Count == 3 && (temp[1].getType() == Global.INTEGER_ARRAY || temp[1].getType() == Global.REAL_ARRAY || temp[1].getType() == Global.STRING_ARRAY))
+            if (temp.Count == 3 && Global.isDataType(temp[1].getType()))
             {
                 list.Add(temp[1]);
             }
@@ -52,6 +52,7 @@ internal class Interpreter(List<Token> tokens, int level)
             }
         }
         tokens[j].setArg(list);
+        i--;
         return tokens[j];
     }
     private readonly List<Token> tokens = tokens;
@@ -64,9 +65,9 @@ internal class Interpreter(List<Token> tokens, int level)
         }
     }
     private readonly int Level = level;
-    private bool allowedInWrite(Token token) => token.getType() == Global.STRING || Global.isOperators(token.getType()) || token.getType() == Global.COMMA || token.getType() == Global.FUNCTION || Global.isDataType(token.getType()) || Global.isBrackets(token.getType());
+    private bool allowedInWrite(Token token) => token.getType() == Global.REAL || token.getType() == Global.STRING || Global.isOperators(token.getType()) || token.getType() == Global.FUNCTION || Global.isDataType(token.getType()) || Global.isBrackets(token.getType()) || token.getType() == Global.COMMA;
     private bool allowedInRead(Token token) => Global.isDataType(token.getType()) || Global.COMMA == token.getType();
-    private bool allowedInWhile(Token token) => Global.isOperators(token.getType()) || token.getType() == Global.FUNCTION || Global.isDataType(token.getType()) || Global.isBrackets(token.getType());
+    private bool allowedInWhile(Token token) => token.getType() == Global.REAL || token.getType() == Global.STRING || Global.isOperators(token.getType()) || token.getType() == Global.FUNCTION || Global.isDataType(token.getType()) || Global.isBrackets(token.getType());
     public Token Evaluate()
     {
         for (var i = 0; i < tokens.Count; i++)
@@ -522,7 +523,13 @@ internal class Interpreter(List<Token> tokens, int level)
                 list.Add(new Token(Global.LEFT_FIRST, "", "", 0, 0, 0));
                 for (; i < tokens.Count && tokens[i].getType() != Global.SEMI_COLON; i++)
                 {
-                    if (allowedInWhile(tokens[i])) list.Add(tokens[i]);
+                    if (allowedInWhile(tokens[i]))
+                    {
+                        if (tokens[i].getType() == Global.FUNCTION)
+                            list.Add(functionCleanUp(ref i));
+                        else
+                            list.Add(tokens[i]);
+                    }
                     else
                     {
                         Error error = new Error(tokens[i], "Illegal Character");
@@ -536,6 +543,6 @@ internal class Interpreter(List<Token> tokens, int level)
             }
         }
         clean();
-        return new Token("", "", "", 0, 0, 0);
+        return new Token("", "0","", 0, 0, 0);
     }
 }

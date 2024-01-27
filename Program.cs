@@ -103,7 +103,7 @@ public class Global
     public const string INTEGER_ARRAY = "integer_array";
     public const string REAL_ARRAY = "real_array";
     public const string STRING_ARRAY = "string_array";
-    public static bool isDataType(string str) => str==REAL||str == INTEGER_VARIABLE || str == REAL_VARIABLE ||str== STRING_VARIABLE||str==INTEGER_ARRAY||str==REAL_ARRAY||str==STRING_ARRAY;
+    public static bool isDataType(string str) => str == INTEGER_VARIABLE || str == REAL_VARIABLE ||str== STRING_VARIABLE||str==INTEGER_ARRAY||str==REAL_ARRAY||str==STRING_ARRAY;
     //Keywords
     public const string WRITE = "write";
     public const string READ = "read";
