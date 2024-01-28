@@ -14,7 +14,7 @@ public class Token(string type, string value, string name, int start, int end, i
     private readonly int end = end;
     private readonly int line = line;
     private int index = 0;
-    private List<Token> data;
+    private List<Token> data=new List<Token>();
 
     //Set
     public void setArg(List<Token> data) => this.data = data;
@@ -104,20 +104,21 @@ public class Token(string type, string value, string name, int start, int end, i
                         }
                         if (j == data.Count)
                         {
-                            error1 = new Error(data[j - 1], "Insufficient Arguments");
+                            error1 = new Error(this, "Insufficient Arguments");
                             error1.Execute();
                         }
                         else
                         {
                             arguments[i + 1].setValue(data[j].getValue());
                             j++;
+                            i++;
                         }
-                        if (i < arguments.Count - 2)
+                        if (i < arguments.Count - 1)
                         {
-                            if (arguments[i + 2].getType() == Global.COMMA) i += 2;
+                            if (arguments[i + 1].getType() == Global.COMMA) i ++;
                             else
                             {
-                                error1 = new Error(arguments[i + 2], "Invalid Argument");
+                                error1 = new Error(arguments[i + 1], "Invalid Argument");
                                 error1.Execute();
                             }
                         }
@@ -135,20 +136,21 @@ public class Token(string type, string value, string name, int start, int end, i
                         }
                         if (j == data.Count)
                         {
-                            error1 = new Error(data[j - 1], "Insufficient Arguments");
+                            error1 = new Error(this, "Insufficient Arguments");
                             error1.Execute();
                         }
                         else
                         {
                             arguments[i + 1].setValue(data[j].getValue());
                             j++;
+                            i++;
                         }
-                        if (i < arguments.Count - 2)
+                        if (i < arguments.Count - 1)
                         {
-                            if (arguments[i + 2].getType() == Global.COMMA) i += 2;
+                            if (arguments[i + 1].getType() == Global.COMMA) i ++;
                             else
                             {
-                                error1 = new Error(arguments[i + 2], "Invalid Argument");
+                                error1 = new Error(arguments[i + 1], "Invalid Argument");
                                 error1.Execute();
                             }
                         }
@@ -166,20 +168,21 @@ public class Token(string type, string value, string name, int start, int end, i
                         }
                         if (j == data.Count)
                         {
-                            error1 = new Error(data[j - 1], "Insufficient Arguments");
+                            error1 = new Error(this, "Insufficient Arguments");
                             error1.Execute();
                         }
                         else
                         {
                             arguments[i + 1].setValue(data[j].getValue());
                             j++;
+                            i++;
                         }
-                        if (i < arguments.Count - 2)
+                        if (i < arguments.Count - 1)
                         {
-                            if (arguments[i + 2].getType() == Global.COMMA) i += 2;
+                            if (arguments[i + 1].getType() == Global.COMMA) i ++;
                             else
                             {
-                                error1 = new Error(arguments[i + 2], "Invalid Argument");
+                                error1 = new Error(arguments[i + 1], "Invalid Argument");
                                 error1.Execute();
                             }
                         }

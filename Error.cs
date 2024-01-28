@@ -11,7 +11,7 @@ internal class Error(Token token, string error)
     private readonly string code = Global.getCode();
     public void Execute()
     {
-        Console.Write("Line " + token.getLine() + " ");
+        Console.Write("  Line " + token.getLine() + " ");
         for (var i = 0; i < code.Length; i++)
         {
             if (line > token.getLine()) break;

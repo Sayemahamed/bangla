@@ -49,6 +49,7 @@ internal class Interpreter(List<Token> tokens, int level)
         if (list.Count != 0)
             tokens[j].setArg(list);
         if (i > j) i--;
+        if (list.Count == 0) i = j;
         return tokens[j];
     }
     private readonly List<Token> tokens = tokens;
