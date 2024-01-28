@@ -84,6 +84,28 @@ public class Token(string type, string value, string name, int start, int end, i
         {
             if (getName() != "প্রধান")
                 Global.memory.Push(new SortedDictionary<string, NODE>());
+            var arguments = Global.functions[getName()].getArguments();
+            if (arguments.Count != 0)
+            {
+                Error error1;
+                var j = 0;
+                for(var i = 0; i < arguments.Count; i++)
+                {
+                    if (arguments[i].getType() == Global.INTEGER_INITIALIZER)
+                    {
+                        if(i>=arguments.Count || arguments[i+1].getType() != Global.VARIABLE)
+                        {
+                            error1 = new Error(arguments[i], "Invalid Argument");
+                            error1.Execute();
+                        }
+                    }
+                }
+            }
+            if(arguments.Count == 0 && data.Count != 0)
+            {
+                Error error1 = new Error(data[0], "Invalid Argument");
+                error1.Execute();
+            }
             Interpreter interpreter = new Interpreter(Global.functions[getName()].getCode(), 3);
             var a = interpreter.Evaluate().getValue();
             if (getName() != "প্রধান")

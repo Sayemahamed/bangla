@@ -42,7 +42,7 @@ internal class Interpreter(List<Token> tokens, int level)
                 i++;
                 Expressions expressions = new Expressions(temp);
                 var a = expressions.evaluate();
-                if (decimal.TryParse(a, out _)) list.Add(new Token(Global.REAL, a, "", 0, 0, 0));
+                if (decimal.TryParse(a, out _)) list.Add(new Token(Global.REAL, a, "", temp[1].getStart(), temp[temp.Count - 2].getEnd(), temp[1].getLine()));
                 else list.Add(new Token(Global.STRING, a, "", 0, 0, 0));
                 Global.cleanUp();
             }
