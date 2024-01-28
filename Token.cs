@@ -117,7 +117,7 @@ public class Token(string type, string value, string name, int start, int end, i
                             if (arguments[i + 2].getType() == Global.COMMA) i += 2;
                             else
                             {
-                                error1 = new Error(arguments[i + 2], "Insufficient Arguments");
+                                error1 = new Error(arguments[i + 2], "Invalid Argument");
                                 error1.Execute();
                             }
                         }
@@ -148,7 +148,7 @@ public class Token(string type, string value, string name, int start, int end, i
                             if (arguments[i + 2].getType() == Global.COMMA) i += 2;
                             else
                             {
-                                error1 = new Error(arguments[i + 2], "Insufficient Arguments");
+                                error1 = new Error(arguments[i + 2], "Invalid Argument");
                                 error1.Execute();
                             }
                         }
@@ -179,7 +179,7 @@ public class Token(string type, string value, string name, int start, int end, i
                             if (arguments[i + 2].getType() == Global.COMMA) i += 2;
                             else
                             {
-                                error1 = new Error(arguments[i + 2], "Insufficient Arguments");
+                                error1 = new Error(arguments[i + 2], "Invalid Argument");
                                 error1.Execute();
                             }
                         }
