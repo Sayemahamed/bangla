@@ -89,19 +89,114 @@ public class Token(string type, string value, string name, int start, int end, i
             {
                 Error error1;
                 var j = 0;
-                for(var i = 0; i < arguments.Count; i++)
+                for (var i = 0; i < arguments.Count; i++)
                 {
                     if (arguments[i].getType() == Global.INTEGER_INITIALIZER)
                     {
-                        if(i>=arguments.Count || arguments[i+1].getType() != Global.VARIABLE)
+                        if (i >= arguments.Count || arguments[i + 1].getType() != Global.VARIABLE)
                         {
                             error1 = new Error(arguments[i], "Invalid Argument");
                             error1.Execute();
                         }
+                        else
+                        {
+                            Global.memory.Peek().Add(arguments[i + 1].getName(), new NODE(Global.INTEGER_VARIABLE, 1));
+                        }
+                        if (j == data.Count)
+                        {
+                            error1 = new Error(data[j - 1], "Insufficient Arguments");
+                            error1.Execute();
+                        }
+                        else
+                        {
+                            arguments[i + 1].setValue(data[j].getValue());
+                            j++;
+                        }
+                        if (i < arguments.Count - 2)
+                        {
+                            if (arguments[i + 2].getType() == Global.COMMA) i += 2;
+                            else
+                            {
+                                error1 = new Error(arguments[i + 2], "Insufficient Arguments");
+                                error1.Execute();
+                            }
+                        }
+                    }
+                    else if (arguments[i].getType() == Global.REAL_INITIALIZER)
+                    {
+                        if (i >= arguments.Count || arguments[i + 1].getType() != Global.VARIABLE)
+                        {
+                            error1 = new Error(arguments[i], "Invalid Argument");
+                            error1.Execute();
+                        }
+                        else
+                        {
+                            Global.memory.Peek().Add(arguments[i + 1].getName(), new NODE(Global.REAL_VARIABLE, 1));
+                        }
+                        if (j == data.Count)
+                        {
+                            error1 = new Error(data[j - 1], "Insufficient Arguments");
+                            error1.Execute();
+                        }
+                        else
+                        {
+                            arguments[i + 1].setValue(data[j].getValue());
+                            j++;
+                        }
+                        if (i < arguments.Count - 2)
+                        {
+                            if (arguments[i + 2].getType() == Global.COMMA) i += 2;
+                            else
+                            {
+                                error1 = new Error(arguments[i + 2], "Insufficient Arguments");
+                                error1.Execute();
+                            }
+                        }
+                    }
+                    else if (arguments[i].getType() == Global.STRING_INITIALIZER)
+                    {
+                        if (i >= arguments.Count || arguments[i + 1].getType() != Global.VARIABLE)
+                        {
+                            error1 = new Error(arguments[i], "Invalid Argument");
+                            error1.Execute();
+                        }
+                        else
+                        {
+                            Global.memory.Peek().Add(arguments[i + 1].getName(), new NODE(Global.STRING_VARIABLE, 1));
+                        }
+                        if (j == data.Count)
+                        {
+                            error1 = new Error(data[j - 1], "Insufficient Arguments");
+                            error1.Execute();
+                        }
+                        else
+                        {
+                            arguments[i + 1].setValue(data[j].getValue());
+                            j++;
+                        }
+                        if (i < arguments.Count - 2)
+                        {
+                            if (arguments[i + 2].getType() == Global.COMMA) i += 2;
+                            else
+                            {
+                                error1 = new Error(arguments[i + 2], "Insufficient Arguments");
+                                error1.Execute();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        error1 = new Error(arguments[i], "Invalid Arguments");
+                        error1.Execute();
                     }
                 }
+                if (j < data.Count)
+                {
+                    error1 = new Error(data[j], "Extra Arguments");
+                    error1.Execute();
+                }
             }
-            if(arguments.Count == 0 && data.Count != 0)
+            if (arguments.Count == 0 && data.Count != 0)
             {
                 Error error1 = new Error(data[0], "Invalid Argument");
                 error1.Execute();
