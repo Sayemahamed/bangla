@@ -101,7 +101,14 @@ internal class Interpreter(List<Token> tokens, int level)
                 {
                     List<Token> list = new List<Token>();
                     list.Add(new Token(Global.LEFT_FIRST, "", "", 0, 0, 0));
-                    while (i < j - 1 && tokens[i].getType() != Global.COMMA) list.Add(tokens[i++]);
+                    while (i < j - 1 && tokens[i].getType() != Global.COMMA)
+                    {
+                        if (tokens[i].getType() == Global.FUNCTION)
+                            list.Add(functionCleanUp(ref i));
+                        else
+                            list.Add(tokens[i]);
+                        i++;
+                    }
                     list.Add(new Token(Global.RIGHT_FIRST, "", "", 0, 0, 0));
                     i++;
                     Expressions expressions = new Expressions(list);
@@ -499,7 +506,14 @@ internal class Interpreter(List<Token> tokens, int level)
                 var j = i + 1;
                 List<Token> token = new List<Token>();
                 token.Add(new Token(Global.LEFT_FIRST, "", "", 0, 0, 0));
-                while (j < tokens.Count && tokens[j].getType() != Global.SEMI_COLON) if (allowedInWhile(tokens[j])) token.Add(tokens[j++]);
+                while (j < tokens.Count && tokens[j].getType() != Global.SEMI_COLON) if (allowedInWhile(tokens[j]))
+                    {
+                        if (tokens[j].getType() == Global.FUNCTION)
+                            token.Add(functionCleanUp(ref j));
+                        else
+                            token.Add(tokens[j]);
+                        j++;
+                    }
                     else
                     {
                         Error error = new Error(tokens[j], "Illegal Character ,Or Expected ;"); error.Execute();

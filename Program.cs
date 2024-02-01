@@ -135,7 +135,7 @@ internal class Program
         //}
         Console.OutputEncoding = Encoding.Unicode;
         Console.InputEncoding = Encoding.Unicode;
-        Optimizer optimizer = new(File.ReadAllText("C:\\Users\\sayem\\Desktop\\lo.txt"));
+        Optimizer optimizer = new(File.ReadAllText("C:\\Users\\sayem\\Desktop\\log.txt"));
         Global.setCode(Converter.IN(optimizer.getCode()));
         var code = Global.getCode();
         Lexer lexer = new Lexer(code);
