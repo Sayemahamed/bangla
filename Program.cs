@@ -128,18 +128,18 @@ internal class Program
     static void Main(string[] args)
     {
         Global.memory.Push(new SortedDictionary<string, NODE>());
-        //if (args.Length == 0)
-        //{
-        //    Console.WriteLine("ENTER FILE PATH");
-        //    return;
-        //}
+        if (args.Length == 0)
+        {
+            Console.WriteLine("ENTER FILE PATH");
+            return;
+        }
         Console.OutputEncoding = Encoding.Unicode;
         Console.InputEncoding = Encoding.Unicode;
-        Optimizer optimizer = new(File.ReadAllText("C:\\Users\\sayem\\Desktop\\log.txt"));
+        Optimizer optimizer = new(File.ReadAllText(args[0]));
         Global.setCode(Converter.IN(optimizer.getCode()));
         var code = Global.getCode();
         Lexer lexer = new Lexer(code);
-        foreach (Token t in lexer.getTokens()) Console.WriteLine(t.getType());
+        //foreach (Token t in lexer.getTokens()) Console.WriteLine(t.getType());
         FunctionGenerator generator = new FunctionGenerator(lexer.getTokens());
         generator.Generate();
         var startPoint = new Token(Global.VARIABLE, "", "প্রধান", 0, 0, 0);
